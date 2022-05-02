@@ -1,0 +1,9 @@
+D:\dream\workspace\Reaper\godot\.mono\temp\bin\Debug\Godot.dll
+D:\dream\workspace\Reaper\godot\.mono\temp\bin\Debug\Godot.pdb
+D:\dream\workspace\Reaper\godot\.mono\temp\obj\Debug\Godot.csproj.AssemblyReference.cache
+D:\dream\workspace\Reaper\godot\.mono\temp\obj\Debug\Godot.GeneratedMSBuildEditorConfig.editorconfig
+D:\dream\workspace\Reaper\godot\.mono\temp\obj\Debug\Godot.AssemblyInfoInputs.cache
+D:\dream\workspace\Reaper\godot\.mono\temp\obj\Debug\Godot.AssemblyInfo.cs
+D:\dream\workspace\Reaper\godot\.mono\temp\obj\Debug\Godot.csproj.CoreCompileInputs.cache
+D:\dream\workspace\Reaper\godot\.mono\temp\obj\Debug\Godot.dll
+D:\dream\workspace\Reaper\godot\.mono\temp\obj\Debug\Godot.pdb
