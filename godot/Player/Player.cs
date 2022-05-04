@@ -8,12 +8,12 @@ public class Player : KinematicBody2D
   // private string b = "text";
   // Called when the node enters the scene tree for the first time.
 
-  public int MaxSpeed = 160;
-  public int Acceleration = 20;
-  public int Friction = 1;
+  public int MaxSpeed = 100;
+  public float Acceleration = 10;
+  public float Friction = 10;
  
   public Vector2 Velocity = Vector2.Zero;
-
+ 
   public override void _PhysicsProcess(float delta)
   {
     base._PhysicsProcess(delta);
@@ -22,14 +22,8 @@ public class Player : KinematicBody2D
     input_velocity.y = Input.GetActionStrength("ui_down") - Input.GetActionStrength("ui_up");
     input_velocity = input_velocity.Normalized();
 
-    if (input_velocity == Vector2.Zero) {
-      Velocity = Velocity.MoveToward(Vector2.Zero,Friction);
-    } else {
-      Velocity += input_velocity*Acceleration*delta;
-      Velocity = Velocity.Clamped(MaxSpeed *delta);
-    }
-
+    Velocity = Velocity.MoveToward(input_velocity * MaxSpeed, input_velocity == Vector2.Zero?Friction:Acceleration);
     GD.Print(Velocity);
-    MoveAndCollide(Velocity);
+    Velocity = MoveAndSlide(Velocity);
   }
 }
