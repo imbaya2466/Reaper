@@ -13,6 +13,15 @@ public class Player : KinematicBody2D
   public float Friction = 10;
  
   public Vector2 Velocity = Vector2.Zero;
+
+  public AnimationTree Animation = null;
+  public AnimationNodeStateMachinePlayback AnimationState = null;
+
+  public override void _Ready()
+  {
+    Animation = GetNode<AnimationTree>("AnimationTree");
+    AnimationState = (AnimationNodeStateMachinePlayback)Animation.Get("parameters/playback");
+  }
  
   public override void _PhysicsProcess(float delta)
   {
@@ -22,7 +31,16 @@ public class Player : KinematicBody2D
     input_velocity.y = Input.GetActionStrength("ui_down") - Input.GetActionStrength("ui_up");
     input_velocity = input_velocity.Normalized();
 
-    Velocity = Velocity.MoveToward(input_velocity * MaxSpeed, input_velocity == Vector2.Zero?Friction:Acceleration);
+    if (input_velocity == Vector2.Zero) {
+      AnimationState.Travel("Idle");
+      Velocity = Velocity.MoveToward(input_velocity * MaxSpeed, Friction);
+    } else {
+      Animation.Set("parameters/Idle/blend_position", input_velocity);
+      Animation.Set("parameters/Run/blend_position", input_velocity);
+      AnimationState.Travel("Run");
+      Velocity = Velocity.MoveToward(input_velocity * MaxSpeed, Acceleration);
+    }
+    
     GD.Print(Velocity);
     Velocity = MoveAndSlide(Velocity);
   }
