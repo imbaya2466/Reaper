@@ -3,27 +3,45 @@ using System;
 
 public class Player : KinematicBody2D
 {
-  // Declare member variables here. Examples:
-  // private int a = 2;
-  // private string b = "text";
-  // Called when the node enters the scene tree for the first time.
-
-  public int MaxSpeed = 100;
-  public float Acceleration = 10;
-  public float Friction = 10;
+  public int mMaxSpeed = 100;
+  public float mAcceleration = 10;
+  public float mFriction = 10;
  
-  public Vector2 Velocity = Vector2.Zero;
+  public Vector2 mVelocity = Vector2.Zero;
 
-  public AnimationTree Animation = null;
-  public AnimationNodeStateMachinePlayback AnimationState = null;
+  public PlayerSate mPlayerSate= PlayerSate.MOVE;
+
+  public AnimationTree mAnimation = null;
+  public AnimationNodeStateMachinePlayback mAnimationState = null;
+
+  public enum PlayerSate{
+    MOVE,
+    ROLL,
+    ATTACK
+  } 
 
   public override void _Ready()
   {
-    Animation = GetNode<AnimationTree>("AnimationTree");
-    AnimationState = (AnimationNodeStateMachinePlayback)Animation.Get("parameters/playback");
+    mAnimation = GetNode<AnimationTree>("AnimationTree");
+    mAnimationState = (AnimationNodeStateMachinePlayback)mAnimation.Get("parameters/playback");
   }
  
-  public override void _PhysicsProcess(float delta)
+  public override void _Process(float delta)
+  {
+    base._PhysicsProcess(delta);
+    switch (mPlayerSate) {
+      case PlayerSate.MOVE:
+        MoveProcess(delta);
+        break;
+      case PlayerSate.ROLL:
+        break;
+      case PlayerSate.ATTACK:
+        AttacksProcess(delta);
+        break;
+    }
+  }
+
+  private void MoveProcess(float delta)
   {
     base._PhysicsProcess(delta);
     Vector2 input_velocity= Vector2.Zero;
@@ -32,16 +50,28 @@ public class Player : KinematicBody2D
     input_velocity = input_velocity.Normalized();
 
     if (input_velocity == Vector2.Zero) {
-      AnimationState.Travel("Idle");
-      Velocity = Velocity.MoveToward(input_velocity * MaxSpeed, Friction);
+      mAnimationState.Travel("Idle");
+      mVelocity = mVelocity.MoveToward(input_velocity * mMaxSpeed, mFriction);
     } else {
-      Animation.Set("parameters/Idle/blend_position", input_velocity);
-      Animation.Set("parameters/Run/blend_position", input_velocity);
-      AnimationState.Travel("Run");
-      Velocity = Velocity.MoveToward(input_velocity * MaxSpeed, Acceleration);
+      mAnimation.Set("parameters/Idle/blend_position", input_velocity);
+      mAnimation.Set("parameters/Run/blend_position", input_velocity);
+      mAnimation.Set("parameters/Attack/blend_position", input_velocity);
+      mAnimationState.Travel("Run");
+      mVelocity = mVelocity.MoveToward(input_velocity * mMaxSpeed, mAcceleration);
     }
     
-    GD.Print(Velocity);
-    Velocity = MoveAndSlide(Velocity);
+    mVelocity = MoveAndSlide(mVelocity);
+    if (Input.IsActionJustPressed("attack")) {
+      mPlayerSate = PlayerSate.ATTACK;
+    }
+  }
+
+  private void AttacksProcess(float delta) {
+    mVelocity = Vector2.Zero;
+    mAnimationState.Travel("Attack");
+  }
+
+  public void AttackAnimationFinish() {
+    mPlayerSate = PlayerSate.MOVE;
   }
 }
