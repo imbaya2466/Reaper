@@ -26,7 +26,7 @@ public class Player : KinematicBody2D
     mAnimationState = (AnimationNodeStateMachinePlayback)mAnimation.Get("parameters/playback");
   }
  
-  public override void _Process(float delta)
+  public override void _PhysicsProcess(float delta)
   {
     base._PhysicsProcess(delta);
     switch (mPlayerSate) {

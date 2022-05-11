@@ -19,13 +19,6 @@ public class Grass : Node2D
         mSprite = GetNode<Sprite>("Sprite");
     }
 
-    public override void _Process(float delta)
-    {
-        if (Input.IsActionJustPressed("attack")) {
-            BeKilled();
-        }
-    }
-
     public void BeKilled() {
         mSprite.Hide();
         mAnimatedSprite.Show();
@@ -34,5 +27,9 @@ public class Grass : Node2D
 
     public void _on_AnimatedSprite_animation_finished(){
         QueueFree();
+    }
+
+    public void _on_Area_area_entered(Area2D area) {
+        BeKilled();
     }
 }
