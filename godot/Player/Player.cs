@@ -6,8 +6,10 @@ public class Player : KinematicBody2D
   public int mMaxSpeed = 100;
   public float mAcceleration = 10;
   public float mFriction = 10;
+  public float mRollMaxSpeed = 150;
  
   public Vector2 mVelocity = Vector2.Zero;
+  public Vector2 mRollVelocity = Vector2.Down;
 
   public PlayerSate mPlayerSate= PlayerSate.MOVE;
 
@@ -34,6 +36,7 @@ public class Player : KinematicBody2D
         MoveProcess(delta);
         break;
       case PlayerSate.ROLL:
+        RollProcess(delta);
         break;
       case PlayerSate.ATTACK:
         AttacksProcess(delta);
@@ -53,9 +56,11 @@ public class Player : KinematicBody2D
       mAnimationState.Travel("Idle");
       mVelocity = mVelocity.MoveToward(input_velocity * mMaxSpeed, mFriction);
     } else {
+      mRollVelocity = input_velocity;
       mAnimation.Set("parameters/Idle/blend_position", input_velocity);
       mAnimation.Set("parameters/Run/blend_position", input_velocity);
       mAnimation.Set("parameters/Attack/blend_position", input_velocity);
+      mAnimation.Set("parameters/Roll/blend_position", input_velocity);
       mAnimationState.Travel("Run");
       mVelocity = mVelocity.MoveToward(input_velocity * mMaxSpeed, mAcceleration);
     }
@@ -63,6 +68,8 @@ public class Player : KinematicBody2D
     mVelocity = MoveAndSlide(mVelocity);
     if (Input.IsActionJustPressed("attack")) {
       mPlayerSate = PlayerSate.ATTACK;
+    } else if (Input.IsActionJustPressed("roll")) {
+      mPlayerSate = PlayerSate.ROLL;
     }
   }
 
@@ -71,6 +78,15 @@ public class Player : KinematicBody2D
     mAnimationState.Travel("Attack");
   }
 
+  private void RollProcess(float delta) {
+    Vector2 velocity = mRollMaxSpeed * mRollVelocity;
+    mAnimationState.Travel("Roll");
+    MoveAndSlide(velocity);
+  }
+
+  public void RollAnimationFinish() {
+    mPlayerSate = PlayerSate.MOVE;
+  }
   public void AttackAnimationFinish() {
     mPlayerSate = PlayerSate.MOVE;
   }
