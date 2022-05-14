@@ -4,3 +4,5 @@
 4. 通过粒子特效和光、场景破坏等提升品质。几乎所有交互都要有粒子系统等，godot支持:https://docs.godotengine.org/zh_CN/latest/tutorials/2d/particle_systems_2d.html
 5. 调试时左侧选择remote可以看实时节点属性
 6. CollisionShape是描述形状的，将其挂载到不同节点下起不同作用，例如碰撞和检测
+7. 重用功能，组合相比继承更好
+8. 对于C#还是代码链接信号比较好，看上去更直观
