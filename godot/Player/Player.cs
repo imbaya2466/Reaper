@@ -9,7 +9,7 @@ public class Player : KinematicBody2D
   public float mRollMaxSpeed = 150;
  
   public Vector2 mVelocity = Vector2.Zero;
-  public Vector2 mRollVelocity = Vector2.Down;
+  public Vector2 mRollVelocity = Vector2.Right;
 
   public PlayerSate mPlayerSate= PlayerSate.MOVE;
 
