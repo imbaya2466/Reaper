@@ -3,14 +3,25 @@ using System;
 
 public class Bat : KinematicBody2D
 {
-    private Vector2 mKnockBack = Vector2.Zero;
+    private Vector2 mVelocity = Vector2.Zero;
     private int mKnockBackSpeed = 170;
+    public int MAX_SPEED = 50;
+    public float ACCELERATION = 10;
 
     private AnimatedSprite mBatSprite;
     private AnimatedSprite mDieAnimation;
+    private PlayerDetection mPlayerDetection;
 
     [Export]
     private int mHealth = 2;
+
+    public enum Sate{
+        IDLE,
+        WANDER,
+        ATTACK
+    } 
+
+    private Sate sate = Sate.IDLE;
 
     public override void _Ready()
     {
@@ -19,12 +30,34 @@ public class Bat : KinematicBody2D
         mBatSprite = GetNode<AnimatedSprite>("BatSprite");
         mDieAnimation = GetNode<AnimatedSprite>("DieAnimation");
         mDieAnimation.Connect("animation_finished", this, "_on_Die");
+        mPlayerDetection = GetNode<PlayerDetection>("PlayerDetection");
     }
 
     public override void _PhysicsProcess(float delta)
     {
-        mKnockBack = mKnockBack.MoveToward(Vector2.Zero , 10);
-        mKnockBack = MoveAndSlide(mKnockBack);
+        Node2D player = mPlayerDetection.GetPlayr();
+        if (player == null) {
+            sate = Sate.IDLE;
+        } else {
+            sate = Sate.ATTACK;
+        }
+
+        switch(sate) {
+            case Sate.IDLE:
+                mVelocity = mVelocity.MoveToward(Vector2.Zero,10);
+                break;
+            case Sate.WANDER:
+                break;
+            case Sate.ATTACK:
+                if (player!=null) {
+                    Vector2 vect=(player.GlobalPosition - GlobalPosition).Normalized();
+                    mVelocity = mVelocity.MoveToward(vect * MAX_SPEED, ACCELERATION);
+                    mBatSprite.FlipH = mVelocity.x < 0;
+                }
+                break;
+        }
+
+        mVelocity = MoveAndSlide(mVelocity);
     }
 
     public void _on_Hurt(Area2D area) 
@@ -35,8 +68,8 @@ public class Bat : KinematicBody2D
             mDieAnimation.Show();
             mDieAnimation.Play("default");
         } else {
-            mKnockBack = this.GlobalPosition - area.GlobalPosition;
-            mKnockBack = mKnockBack.Normalized() * mKnockBackSpeed;
+            mVelocity = this.GlobalPosition - area.GlobalPosition;
+            mVelocity = mVelocity.Normalized() * mKnockBackSpeed;
         }
     }
 
