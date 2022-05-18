@@ -8,6 +8,9 @@ public class Player : KinematicBody2D
   public float mFriction = 10;
   public float mRollMaxSpeed = 150;
  
+  [Export]
+  public int mHealth = 4;
+
   public Vector2 mVelocity = Vector2.Zero;
   public Vector2 mRollVelocity = Vector2.Right;
 
@@ -15,6 +18,7 @@ public class Player : KinematicBody2D
 
   public AnimationTree mAnimation = null;
   public AnimationNodeStateMachinePlayback mAnimationState = null;
+  private HurtBox mHurtBox;
 
   public enum PlayerSate{
     MOVE,
@@ -26,6 +30,8 @@ public class Player : KinematicBody2D
   {
     mAnimation = GetNode<AnimationTree>("AnimationTree");
     mAnimationState = (AnimationNodeStateMachinePlayback)mAnimation.Get("parameters/playback");
+    mHurtBox = GetNode<HurtBox>("HurtBox");
+    mHurtBox.Connect("OnHit", this, "_on_Hurt");
   }
  
   public override void _PhysicsProcess(float delta)
@@ -84,10 +90,21 @@ public class Player : KinematicBody2D
     MoveAndSlide(velocity);
   }
 
-  public void RollAnimationFinish() {
+  public void RollAnimationFinish()
+  {
     mPlayerSate = PlayerSate.MOVE;
   }
-  public void AttackAnimationFinish() {
+  public void AttackAnimationFinish()
+  {
     mPlayerSate = PlayerSate.MOVE;
+  }
+
+  public void _on_Hurt()
+  {
+    mHealth--;
+    mHurtBox.StartInvincible(1);
+    if (mHealth==0) {
+      QueueFree();
+    }
   }
 }

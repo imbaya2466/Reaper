@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Shadows/SmallShadow.png" type="Texture" id=1]
 [ext_resource path="res://Enemies/Bat.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Enemies/Bat.cs" type="Script" id=4]
 [ext_resource path="res://Effects/EnemyDeathEffect.png" type="Texture" id=5]
 [ext_resource path="res://Scene/PlayerDetection.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scene/HitBox.tscn" type="PackedScene" id=7]
 
 [sub_resource type="AtlasTexture" id=9]
 atlas = ExtResource( 5 )
@@ -93,6 +94,9 @@ height = 6.0
 [sub_resource type="CircleShape2D" id=20]
 radius = 56.0089
 
+[sub_resource type="CircleShape2D" id=21]
+radius = 4.0
+
 [node name="Bat" type="KinematicBody2D"]
 collision_layer = 0
 script = ExtResource( 4 )
@@ -105,7 +109,7 @@ frames = SubResource( 19 )
 [node name="BatSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -11 )
 frames = SubResource( 6 )
-frame = 2
+frame = 4
 playing = true
 
 [node name="Sprite2" type="Sprite" parent="BatSprite"]
@@ -127,5 +131,13 @@ shape = SubResource( 8 )
 modulate = Color( 1, 1, 1, 0.537255 )
 shape = SubResource( 20 )
 
+[node name="HitBox" parent="." instance=ExtResource( 7 )]
+collision_mask = 2
+
+[node name="CollisionShape2D" parent="HitBox" index="0"]
+position = Vector2( 0, -12 )
+shape = SubResource( 21 )
+
 [editable path="HurtBox"]
 [editable path="PlayerDetection"]
+[editable path="HitBox"]
