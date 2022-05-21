@@ -109,7 +109,7 @@ frames = SubResource( 19 )
 [node name="BatSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -11 )
 frames = SubResource( 6 )
-frame = 4
+frame = 3
 playing = true
 
 [node name="Sprite2" type="Sprite" parent="BatSprite"]

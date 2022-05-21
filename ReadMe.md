@@ -8,3 +8,4 @@ Godot 2D game
 
 
 TODO:
+https://doc.weixin.qq.com/sheet/e3_ACQAPQZWACk1C1REnYhSCixyuh7A7?scode=AJEAIQdfAAofo17IrsACQAPQZWACk&tab=BB08J2

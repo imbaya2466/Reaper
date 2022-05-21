@@ -20,6 +20,9 @@ public class Player : KinematicBody2D
   public AnimationNodeStateMachinePlayback mAnimationState = null;
   private HurtBox mHurtBox;
 
+  [Signal]
+  delegate void HealthChange(int val);
+
   public enum PlayerSate{
     MOVE,
     ROLL,
@@ -103,6 +106,7 @@ public class Player : KinematicBody2D
   {
     mHealth--;
     mHurtBox.StartInvincible(1);
+    EmitSignal("HealthChange",mHealth);
     if (mHealth==0) {
       QueueFree();
     }
