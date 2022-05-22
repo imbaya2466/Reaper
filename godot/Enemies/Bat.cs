@@ -11,6 +11,7 @@ public class Bat : KinematicBody2D
     private AnimatedSprite mBatSprite;
     private AnimatedSprite mDieAnimation;
     private PlayerDetection mPlayerDetection;
+    private SoftCollision mSoftCollision;
 
     [Export]
     private int mHealth = 2;
@@ -31,6 +32,8 @@ public class Bat : KinematicBody2D
         mDieAnimation = GetNode<AnimatedSprite>("DieAnimation");
         mDieAnimation.Connect("animation_finished", this, "_on_Die");
         mPlayerDetection = GetNode<PlayerDetection>("PlayerDetection");
+        mSoftCollision = GetNode<SoftCollision>("SoftCollision");
+        mSoftCollision.Connect("SoftCollisionEnter",this,"OnSoftCollisionEnter");
     }
 
     public override void _PhysicsProcess(float delta)
@@ -76,5 +79,10 @@ public class Bat : KinematicBody2D
     public void _on_Die() 
     {
         QueueFree();
+    }
+
+    public void OnSoftCollisionEnter(Vector2 vec)
+    {
+        mVelocity = vec * 50;
     }
 }
