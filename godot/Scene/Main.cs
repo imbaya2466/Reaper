@@ -12,7 +12,7 @@ public class Main : Node2D
     MainUI mMainUI;
     public override void _Ready()
     {
-        mMainUI = GetNode<MainUI>("HealthUI");
+        mMainUI = GetNode<MainUI>("CanvasLayer/HealthUI");
         mPlayer = GetNode<Player>("YSort/Player");
         mMainUI.SetMaxHearts(mPlayer.mHealth);
         mMainUI.SetHearts(mPlayer.mHealth);
