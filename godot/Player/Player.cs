@@ -106,6 +106,7 @@ public class Player : KinematicBody2D
   {
     mHealth--;
     mHurtBox.StartInvincible(1);
+    //可以播放shader动画
     EmitSignal("HealthChange",mHealth);
     if (mHealth==0) {
       QueueFree();

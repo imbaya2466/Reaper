@@ -1,10 +1,20 @@
-[gd_scene load_steps=54 format=2]
+[gd_scene load_steps=61 format=2]
 
 [ext_resource path="res://Player/Player.cs" type="Script" id=1]
 [ext_resource path="res://Player/Player.png" type="Texture" id=2]
 [ext_resource path="res://Scene/HitBox.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scene/HurtBox.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Shadows/MediumShadow.png" type="Texture" id=5]
+[ext_resource path="res://Music and Sounds/Swipe.wav" type="AudioStream" id=6]
+[ext_resource path="res://new_shader.tres" type="Shader" id=7]
+
+[sub_resource type="ShaderMaterial" id=61]
+shader = ExtResource( 7 )
+shader_param/active = true
+
+[sub_resource type="ShaderMaterial" id=62]
+shader = ExtResource( 7 )
+shader_param/active = true
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 3.99999
@@ -62,6 +72,20 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
+}
+tracks/4/type = "audio"
+tracks/4/path = NodePath("AudioStreamPlayer")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 6 )
+} ],
+"times": PoolRealArray( 0.1 )
 }
 
 [sub_resource type="Animation" id=39]
@@ -641,7 +665,56 @@ height = 6.0
 radius = 6.0
 height = 4.0
 
+[sub_resource type="Animation" id=63]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/active")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=64]
+resource_name = "normal"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/active")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=65]
+resource_name = "white_b"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/active")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+
 [node name="Player" type="KinematicBody2D"]
+material = SubResource( 61 )
 collision_layer = 2
 script = ExtResource( 1 )
 
@@ -650,6 +723,7 @@ position = Vector2( 0, 2 )
 texture = ExtResource( 5 )
 
 [node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 62 )
 position = Vector2( 1, -8 )
 texture = ExtResource( 2 )
 hframes = 60
@@ -690,6 +764,7 @@ parameters/Run/blend_position = Vector2( 1, 0 )
 
 [node name="HitBoxPivot" type="Position2D" parent="."]
 position = Vector2( 0, -4 )
+rotation = 1.5708
 
 [node name="HitBox" parent="HitBoxPivot" instance=ExtResource( 3 )]
 
@@ -704,6 +779,13 @@ collision_layer = 2
 [node name="CollisionShape2D" parent="HurtBox" index="0"]
 position = Vector2( 0, -5 )
 shape = SubResource( 60 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 63 )
+anims/normal = SubResource( 64 )
+anims/white_b = SubResource( 65 )
 
 [editable path="HitBoxPivot/HitBox"]
 [editable path="HurtBox"]
